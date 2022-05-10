@@ -33,6 +33,16 @@
     }
     values = newValues;
   }
+
+  const setValue = (index, value) => {
+    const newValues = values.slice();
+    newValues[index] = value;
+    values = newValues;
+  }
+
+  const increment = $event => setValue($event.target.dataset.key, values[$event.target.dataset.key] + 1);
+  const decrement = $event => setValue($event.target.dataset.key, values[$event.target.dataset.key] - 1);
+  const resetValue = $event => setValue($event.target.dataset.key, 1);
 </script>
 
 <main>
@@ -50,7 +60,13 @@
     {#each values.slice(0, subdivisions) as x, i}
       <div class="section">
         <input data-key={i} value={x} on:change={handleChange} />
-        <button tabindex="-1" data-key={i} on:click={copy}>{copied == i ? "✔️" : "📝"}</button>
+        <div class="section-buttons">
+          <button tabindex="-1" data-key={i} on:click={decrement}> - </button>
+          <button tabindex="-1" data-key={i} on:click={copy}>{copied == i ? "✔️" : "📝"}</button>
+          <button tabindex="-1" data-key={i} on:click={increment}> + </button>
+          <br />
+          <button tabindex="-1" data-key={i} on:click={resetValue}> 1 </button>
+        </div>
       </div>
     {/each}
   </div>
@@ -99,8 +115,14 @@
     gap: 5px;
   }
 
+  .section-buttons {
+    line-height: 2.5em;
+    letter-spacing: 1.25em;
+  }
+
   .section button {
     font-size: 1.25em;
+    width: 2em;
   }
 
   .subdivisions, .velocity {
